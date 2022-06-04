@@ -1,0 +1,21 @@
+CONSTRUCTOR:
+
+<script>
+	function Car(modal,year,miles){
+             this.modal = modal;
+             this.year = year;
+             this.miles = miles;
+	}
+	//adding method :
+	Car.prototype.carSummary = function(){
+		return `SUMMARY: ${this.modal} year: ${this.year} has ${this.miles} miles.`
+	}
+
+	//create instanciation :
+	let car1 = new Car("Toyota",2021,300);
+	let car2 = new Car("Nisaan",2020,"20K");
+
+	console.log(car1);
+	console.log(car1.year);
+	console.log(car2.carSummary());
+</script>

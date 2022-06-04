@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	1. get
+======================================
+<p id="showGet" style="color:brown;"></p>
+<script>
+	//window.addEventListener('DOMContentLoaded',getData1);
+	const getData1 = async ()=>{
+		await fetch('https://jsonplaceholder.typicode.com/todos/1',{
+			method:'GET'
+		}).then(response=>{
+			console.log(response);
+			return response.json();
+		}).then(data=>{
+			console.log(data);
+			showGet.innerHTML = `${data.title}`;
+		})
+	}
+window.addEventListener('DOMContentLoaded',getData1);
+</script>
+  2. post , (i)post JSON Data: 
+=======================================
+<p id="showPost" style="background-color:lightskyblue;"></p>
+<p id="showTimeout"></p>
+<button id="postBtn" style="width:120px;height:40px;background-color:lightcyan;
+border: solid blue;cursor:pointer;">POST</button>
+<script>
+	let myInfo = {
+		name:"My Name",
+		city:"Huston",
+		phone:123456,
+		progrramingLanguages:["java","c#","js"],
+		email:"myEmail.com"
+	}
+
+	let postBtn = document.getElementById('postBtn');
+	postBtn.addEventListener('click',async ()=>{
+		let timer = setTimeout(()=>{
+			new AbortController().abort();
+			showTimeout.innerHTML = `<p style="color:red;"> timed out</p> `;
+		},2000);
+		let signal = new AbortController().signal;
+		await fetch('https://jsonplaceholder.typicode.com/todos',{
+			method:"POST",
+			body:JSON.stringify(myInfo),
+			headers:{
+				'content-type': 'application/json'
+			},
+			signal:signal
+		})
+		.then(response=>{
+			clearTimeout(timer);
+			return response.json();
+		})
+		.then(data=>{
+			console.log(data);
+    document.getElementById("showPost").innerHTML = `POST THIS DATA <br> ${data.name} `
+		})
+		.catch(err=>{
+			console.log(err);
+		})})
+</script>
+...........................................................................
+2. (ii) post {form-data} with 1 file: 
+ ===================================
+ <form  id="pawanForm" method="post" enctype="multipart/form-data" 
+ style="border:1px solid skyblue;">
+ 	<label for="name">Name</label>
+ 	<input type="text" name="name" id="name"> <br>
+ 	<label for="file">FILE</label>
+ 	<input type="file" id="pawanFile"> <br>
+ 	<input type="submit" value="Submit">
+ </form>
+
+ <script>
+ 	const pawanForm = document.getElementById('pawanForm');
+ 	const pawanFormData = new FormData(pawanForm);
+ 	const pawanFile = document.getElementById('pawanFile');
+ 	pawanFormData.append('file', pawanFile.files[0]);
+
+ 	pawanForm.addEventListener('submit', async(e)=>{
+    e.preventDefault();
+   const pawanFormData = new FormData(pawanForm);//imp *
+ 	const pawanFile = document.getElementById('pawanFile');//imp *
+ 	pawanFormData.append('file', pawanFile.files[0]);
+ 		await fetch(`https://jsonplaceholder.typicode.com/todos`,{
+ 			method:"POST",
+ 			body:pawanFormData
+ 		}).catch(err=>{
+ 			console.log(err);
+ 		})
+ 	})
+ </script>
+ ........................................................................... 
+2. (iii) Post: form-data/ with multiple files :
+<form  id="studentForm" enctype="multipart/form-data" method="post"
+ style="border:.5px solid darkkhaki;">
+	<label for="firstname">First Name</label>
+	<input type="text" name="firstname"><br>
+	<label for="lastname">Last Name</label>
+	<input type="text" name="lastname"><br>
+
+	<label for="file">upload files</label>
+	<input type="file" id="userFiles" multiple><br><br>
+	<input type="submit" value="uplaod form/files" 
+	style="width:140px;height:24px;border:.5px solid red;">
+</form>
+<p id="showStudentFormData"></p>
+<p id="timeoutPara2"></p>
+<script>
+	const studentForm = document.getElementById('studentForm');
+
+	studentForm.addEventListener('submit', async (e)=>{
+		e.preventDefault();
+		 //timeout:
+  let timer = setTimeout(()=>{
+  	new AbortController().abort();
+  	document.getElementById('timeoutPara2').innerHTML = 'timeout!!!';
+  },2000);
+  let signal = new AbortController().signal;
+
+    const studentForm = document.getElementById('studentForm');
+
+		const studentFormData = new FormData(studentForm);
+		const userFiles = document.getElementById('userFiles');
+		for(const file of userFiles.files){
+			studentFormData.append('files' , file)
+		}
+		await fetch(`https://jsonplaceholder.typicode.com/todos`,{
+			method:"post",
+			signal:signal,
+			body:studentFormData
+		})
+		.then(response=>{
+			console.log(response);
+			clearTimeout(timer);
+			return response.json();
+		})
+		.then(data=>{
+			console.log(data);
+		})
+		.catch(err=>{
+			console.log(err);
+		})
+	})
+</script>
+-------------------------------------------------
+$tudy :- 
+????? post: img/audio/video files ?????? 
+................................................
+  3.put
+  ========================================
+in this example, i changed value of 
+existed Resourse ('https://jsonplaceholder.typicode.com/todos/1') , title: 'delectus aut autem' to 
+title: 'pawan naugain'
+SO WE USE 'PUT' METHOD TO 'UPDATE' EXISTING RESOURCE: 
+ <p id="showPut" style="color:green;"></p>
+ <script>
+ 	
+ 	const putData1 = async ()=>{
+ 		await fetch('https://jsonplaceholder.typicode.com/todos/1',{
+ 			method:'PUT',
+ 			headers:{
+ 				'content-type': 'application/json'
+ 			},
+ 			body:JSON.stringify({
+ 				completed: false,
+                       id: 1,
+                    title: "pawan naugain",
+                   userId: 1
+ 			})
+ 		}).then(response=>{
+ 			console.log(response);
+ 			return response.json();
+ 		}).then(data=>{
+ 			console.log(data);
+ 			showPut.innerHTML = `${data.title}`;
+ 		}).catch(error=>{
+ 			console.log(error);
+ 		})
+ 	}
+ 	window.addEventListener('DOMContentLoaded',putData1);
+ </script>
+................................................................... 
+4. patch 
+============
+The PATCH method is used to update the values of the resource properties.
+
+let’s look at the patch method
+Before writing the code look at the below the placeholder where userID:1 this userID has two property 
+one is the title & another one is the completed. 
+{
+	userId: 1, 
+	id: 1, 
+	title: 'delectus aut autem', 
+	completed: false
+}
+
+Respectively their values are ‘delectus aut autem’ & ‘false’.Here we are going to update the values 
+of the resource properties.
+*so we are only updating, selected proerties/values* 
+{
+	title: we are changing this value, ****
+	completed: and changing this one***
+}
+<script>
+	const patchFunction = async (e)=>{
+		e.preventDefault();
+    await fetch('https://jsonplaceholder.typicode.com/todos/1',{
+    	method:'PATCH',
+    	headers:{'Content-Type': 'application/json'},
+    	body:JSON.stringify({
+    		    title:"this is the example of PATCH method",
+    		    completed:true
+    	})
+    })
+    .then(response=>{
+    	console.log(response)
+    	return response.json();
+    })
+    .then(data=>{
+    	console.log(data);
+    })
+    .catch(err=>{
+    	console.log(err);
+    })
+	}
+window.addEventListener('DOMContentLoaded',patchFunction);
+
+/*in console:
+---------------
+Request Method: PATCH
+Status Code: 200 
+{title: "this is the example of PATCH method", completed: true}
+completed: true
+title: "this is the example of PATCH method" */
+</script>
+................................................................. 
+5. delete method 
+==================
+The DELETE METHOD
+The DELETE method is used to delete a resource specified by its URI.
+
+<p id="showPara" style="background-color:#AC94C9;"></p>
+<p id="showPara2" style="background-color:pink;"></p>
+<button id="showBtn" style="background-color:lightgrey;border:.5px solid green">GET</button>
+<button id="deleteBtn" style="background-color:lightgrey;border:.5px solid red">DELETE</button>
+<script>
+	//get
+	const showPara = document.getElementById('showPara');
+	const showPara2 = document.getElementById('showPara2');
+	const showBtn = document.getElementById('showBtn');
+	const deleteBtn =document.getElementById('deleteBtn');
+	showBtn.addEventListener('click', async ()=>{
+		await fetch('https://jsonplaceholder.typicode.com/todos/1')
+		.then(response=>{
+			console.log(response);
+			return response.json();
+		})
+		.then(data=>{
+			console.log(data);
+      showPara.innerHTML = `${data.title}`;
+		})
+		.catch(err=>{
+			console.log(err);
+		})
+	});
+	//Result : {userId: 1, id: 1, title: 'delectus aut autem', completed: false}
+
+	//delete 
+	deleteBtn.addEventListener('click', async ()=>{
+		await fetch('https://jsonplaceholder.typicode.com/todos/1',{
+			method:"DELETE"
+		})
+		.then(response=>{
+			console.log(response);
+			return response.json();
+		})
+		.then(data=>{
+			console.log(data);
+			if(data.title===undefined){
+				 showPara.innerHTML = `data deleted !!!`;
+			}
+			else 
+			{
+				  showPara.innerHTML = `${data.title}`;
+			}
+    }).catch(err=>{
+			console.log(err);
+		})
+	});//RESULT : {} 
+</script>
+====================================================
+
+following only for practice of Promise.all()/ Promise.allSettled() :
+<script>
+	
+	const pro1 = ()=>{
+         Promise.all(['https://jsonplaceholder.typicode.com/todos/1',
+         	'https://jsonplaceholder.typicode.com/todos/2'].map(url=>fetch(url).then(response=>{
+        	return response.json();
+        })
+        .then(datas=>{
+        	console.log(datas);
+        })
+        .catch(err=>{
+        	console.log(err);
+        })))
+	}
+	window.addEventListener('DOMContentLoaded',pro1);
+</script>
+
+Promise.allSettled() :
+=======================
+<div id="showPromiseData" style="background-color:#568B4C;border:1px solid gray;"></div>
+<div id="errDiv1" style="color:red;"></div>
+
+<script>
+	const URLS = ['https://jsonplaceholder.typicode.com/todos/1',
+	               'https://jsonplaceholder.typicode.comAAA/todos/2',
+	              'https://jsonplaceholder.typicode.com/todos/3']
+
+  const showPromiseData = document.getElementById('showPromiseData');
+
+  window.addEventListener('DOMContentLoaded', proAllSettled1);
+  async function proAllSettled1(){
+  	await Promise.allSettled(URLS.map(url=>fetch(url).then(responses=>{
+  		console.log(responses);
+  		return responses.json();
+  	}))).then(datas=>{
+  		console.log(datas);
+  		const resultHtml = datas.map((data,i)=>{
+  			if(data.status=='fulfilled'){
+  				return `<p style="color:blue;">${data.value.title}</p>`;
+  			}
+  			else if(data.status=='rejected'){
+  				return `<p style="color:white;">ERR:${URLS[i]}:could not fetch data!!!</p><br> 
+  				                  ${data.reason}`;
+  			}
+  		});
+  		showPromiseData.innerHTML = resultHtml.join("");
+  	})
+  	.catch(err=>{
+  		console.log(err);
+  		errDiv1.innerHTML = err;
+  	})
+  }
+</script>
+</body>
+</html>

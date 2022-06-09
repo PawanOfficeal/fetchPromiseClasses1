@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+What are some built-in JavaScript constructors for native objects?
+JAVASCRIPT HAS BUILT-IN CONSTRUCTORS FOR NATIVE OBJECTS:
+new String() // A new String object.
+new Number() // A new Number object.
+new Boolean() // A new Boolean object.
+new Object() // A new Object object.
+new Array() // A new Array object.
+new RegExp() // A new RegExp object.
+new Function() // A new Function object.
+*The Math() object is not in the list. Math is a global object. The new keyword cannot be used on Math.*
+====================                   ========================     =================================== 
+
+---------------------------------------------------
+	how to create objects in js:
+1 (i).object literals:
+<script>
+	let objA = {}
+	objA.name = "myObject";
+	objA.lastname = false;
+
+	console.log(objA);
+	console.log(objA.lastname);
+</script>
+
+1 (ii).object literals:
+<script>
+	let objB = {
+		name:"objcetB",
+		objlastName:"objectLastName",
+		lastName:true
+	}
+	console.log(objB);
+	console.log(objB.objlastName);
+</script>
+
+2. Built-in-object Constructor : 
+
+exapmle1 , how to create String-Object with ' Built-In-Constructor '  
+<script>
+	let myString = new String("pawan");
+</script>
+
+in same way we can create Object with 'Built-In-Constructor' . 
+<script>
+	let objC = new Object();
+	objC.about = "teacher";
+	objC.name = "Manoj Kumar";
+	objC.city = "Euless";
+	console.log(objC);
+	console.log(objC.city);
+</script>
+
+3. Object.Create() Method : 
+
+create new object and inherit properties and methods from other{only one object}object as it's prototype :
+<script>
+	let house = {
+		city:"Dallas",
+		tax:true
+	}
+
+	let apartment = Object.create(house,{rent:{value:true}});
+	console.log(apartment.city);
+	console.log(apartment.rent);
+</script>
+
+4. object.assign() Method:
+Inherit Properties & Methods From More Than One Objcet : 
+object.assign({},proto_obj1,proto_obj2);
+
+<script>
+	let student1 ={
+		school:"Ft Worth High School",
+		subjects:["Math","Science","English"]
+	}
+	let student2 = {
+		school_address:"1234 Main St Ft Worth"
+	}
+
+	let student_A = Object.assign({name:"Ranger Ram"},student1, student2);
+	console.log(student_A.school);
+	console.log(student_A.school_address);
+	console.log(student_A.name);
+</script>
+
+5. CONSTRUCTOR FUNCTION :
+=========================
+user define objcet 
+
+<div id="printInfo" style="background-color: lightskyblue;"></div>
+<script>
+	function Developer(name,job,city){
+		this.name = name;
+		this.job = job;
+		this.city = city;
+	}
+	Developer.prototype.devInfo = function(){
+		const info1 =  `Developer Info: ${this.name} Works In ${this.city}.`;
+		printInfo.innerHTML = info1;
+            return info1;
+	}
+
+	let dev1 = new Developer("Harish","Front End Dev","NY");
+
+	console.log(dev1);
+	console.log(dev1.devInfo());
+
+//creating other constructor which inherit properties(*not Methods) from Developer Constructor: 
+	function Manager(name,job,city,shift){
+		Developer.call(this,name,job,city);
+		this.shift = shift;
+	}
+	let manager1 = new Manager("Marry","Shift manager","Dallas","2nd Shift");
+	//let manager2 = new Manager("Harry","assistant manager","Euless","1st Shift");
+	console.log(manager1);
+
+	//inherit methods from proto:
+	Manager.prototype = Object.create(Developer.prototype);
+	let manager2 = new Manager("Harry","assistant manager","Euless","1st Shift");
+	console.log(manager2);
+	console.log(manager2.devInfo());
+
+</script>
+
+===============================================
+CLASS ES6: 
+
+<div id="showHr1"></div>
+<div id="showHr2"></div>
+
+<div id="showUxUiHrs" style="background-color:green;"></div>
+<script>
+	class SoftwareEr{
+		constructor(name,type1,coreLanguage,office){
+			this.name = name;
+			this.type1 = type1;
+			this.cL = coreLanguage;
+			this.office = office;
+		}
+
+		//static method:
+		static userLogin(){
+			return `only for user login`;
+		}
+		//method:
+		checkHrs(type1){
+			if(this.type1=="Back End Dev"){
+
+				const hrs1 = `FOR Back End Er : 9 A.M. - 5:30 P.M.`;
+				showHr1.innerHTML = hrs1;
+				return hrs1;
+			}
+			if (this.type1=="Front End Dev"){
+				const hrs2 = `Your Hrs: 8:30 A.M. - 6 P.M.`;
+				showHr2.innerHTML = hrs2;
+				return hrs2;
+			}
+		}
+	}
+
+	//creating object instanciations :
+	let Er1 = new SoftwareEr("Pawan","Front End Dev","js","Euless");
+	let Er2 = new SoftwareEr("Jack","Back End Dev","nodeJs","Euless");
+	console.log(Er1);//
+	console.log(Er2);//
+	console.log(Er2.checkHrs());//
+	console.log(Er1.checkHrs());//
+
+
+	//creating 'sub-class' :
+	class UxUiDev extends SoftwareEr{
+		constructor(name,type1,coreLanguage,office,uxUi){
+          super(name,type1,coreLanguage,office);
+          this.uxUi = uxUi;
+		}
+		_uxUiHrs(type1){
+                if(this.type1=="uxUi"){
+                	const uxUiHrs = `UX/UI Hrs : 10 A.M. - 6 P.M.`;
+                	showUxUiHrs.innerHTML = uxUiHrs;
+                	return uxUiHrs;
+                }
+		}
+	}
+
+	//creating object instances for sub class 'UxUiDev' :
+	let uxUi1 = new UxUiDev("Geeta","uxUi","Ps","Irving","UX");
+	let uxUi2 = new UxUiDev("Elizabeth","ux","Ps","Irving","UI");
+
+	console.log(uxUi1);//
+	console.log(uxUi2);//
+	console.log(uxUi1._uxUiHrs());//
+</script>
+===================================================================
+
+CLASS ES-6 : GET/SET 
+--------------------
+
+<div id="d1"></div>
+<div id="d2"></div>
+<script>
+	class Employee{
+		constructor(name,shift,job,id){
+		this.name = name;
+		this.shift = shift;
+		this.job = job;
+		this.id = id;
+        }
+		//static method:
+		
+		static adminLogin(){
+			return alert("Admin Login");
+		}
+        //get & set :
+        //get 
+        get employeeId(){
+        	const showEmp1 = `ID: ${this.name} id is ${this.id}`;
+        	d1.innerHTML = showEmp1;
+        	return showEmp1;
+        }
+
+        //set
+        set employeeId(value){
+            const showEmp2 = `Changed ID: ${this.name} id is ${this.id}`;
+            return showEmp2;
+        }
+		
+
+	}
+
+	let employee1 = new Employee("ravi","1st","welder",123456);
+	let employee2 = new Employee("Suraj","1st","painter",66);
+
+	console.log(employee1);//
+	console.log(employee2.employeeId);//
+	console.log(employee1.employeeId);//
+
+	employee1.employeeId = `22`;
+
+	console.log(employee2.employeeId);//
+	console.log(employee1.employeeId);//
+</script>
+------------------------------------------------------------- 
+easy example of 'get/set' method:
+
+<div id="infoPara1"></div>
+<p id="infoPara2"></p>
+<p id="infoPara3"></p>
+<script>
+	class Teacher{
+		constructor(name,grade,subject){
+			this.name = name;
+			this.grade = grade;
+			this.subject = subject;
+		}
+		get teacherInfo(){
+			const infoHtml1 = `<p>Teacher : ${this.name} Subject : ${this.subject}</p>`;
+			infoPara1.innerHTML = infoHtml1;
+			return infoHtml1;
+		}
+
+		set teacherInfo(value){
+            this.subject = value;
+		}
+	}
+
+	let teacher1 = new Teacher("Ranger","High School","Science");
+	let teacher2 = new Teacher("Pawan","Middle School","Hindi");
+
+	console.log(teacher1);
+	console.log(teacher1.teacherInfo);
+	console.log(teacher2.teacherInfo);
+
+	teacher1.subject = "maths";
+	console.log(teacher1);
+</script>
+
+----------------------------------------------------------- 
+one more simple example of get/set :
+
+<div id="infoDiv1" style="color:blue;"></div>
+<script>
+	class Driver{
+		constructor(name,vehicalType,shift){
+			this.name = name;
+			this.vehicalType = vehicalType;
+			this.shift = shift;
+		}
+		get driverInfo(){
+			const driverHtml = `Name: ${this.name} vehical:${this.vehicalType} Shift:${this.shift}`;
+
+			infoDiv1.innerHTML = driverHtml;
+			return driverHtml;
+		}
+		set driverInfo(value){
+			this.vehicalType = value;
+			this.shift = value;
+		}
+	}
+
+	let driver1 = new Driver("Harry","Oil Tanker","3rd Shift");
+	let driver2 = new Driver("Ram Parsad","Big Rig","1st Shift");
+
+	console.log(driver1);
+	console.log(driver1.driverInfo);
+
+	console.log(driver2);
+	console.log(driver2.driverInfo);
+
+	driver1.vehicalType = "car";
+	driver1.shift = "2nd shift";
+
+	console.log(driver1);
+	console.log(driver1.driverInfo);
+
+</script>
+
+
+
+</body>
+</html>

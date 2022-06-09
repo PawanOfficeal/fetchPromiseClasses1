@@ -1,4 +1,116 @@
-CONSTRUCTOR:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+</html>
+
+What are some built-in JavaScript constructors for native objects?
+JavaScript has built-in constructors for native objects:
+new String() // A new String object.
+new Number() // A new Number object.
+new Boolean() // A new Boolean object.
+new Object() // A new Object object.
+new Array() // A new Array object.
+new RegExp() // A new RegExp object.
+new Function() // A new Function object.
+*The Math() object is not in the list. Math is a global object. The new keyword cannot be used on Math.*
+
+---------------------------------------------------
+THERE ARE 6 WAYS TO CREATE JS OBJECTS:
+
+1. OBJECT LITERALS: 
+===================
+
+(i)a. Object Literals: 
+<script>
+	let obj1 = {};
+	obj1.name = "object1";
+	obj1.owner = "webDev";
+	obj1.info = 1234;
+	//method:
+	obj1.met1 = function(){
+		return `name of this Object is : ${obj1.name}`
+	}
+
+	console.log(obj1);
+	console.log(obj1.info);
+	console.log(obj1.met1());
+</script>
+
+(i)b. 
+<script>
+	let obj2 = {
+		name:"object2",
+		owner:"webDev2",
+		info:8888,
+		met2: function(){
+			return `name of this object is : ${obj2.name}`;
+		}
+	}
+
+	console.log(obj2);
+	console.log(obj2.info);
+	console.log(obj2.met2());
+</script>
+
+2. OBJECT CONSTRUCTOR: 
+=======================
+<script>
+	let car = new Object();
+	car.model = "ford";
+	car.miles = 1000;
+	console.log(car);
+	console.log(car.model);
+</script>
+
+3. USING OBJECT.CREATE() METHOD: 
+=================================
+The Object.create() method creates a new object, using an existing object as the prototype of 
+the newly created object.
+<script>
+	let company = {
+		name:"Media Corp",
+		address:"1234 Main St. Dallas"
+	}
+
+	//creating employee object with 'comapny' object.
+	let employee = Object.create(company,{name:{value:"Raina"}});
+    console.log(company);//{name: 'Media Corp', address: '1234 Main St. Dallas'}
+	console.log(employee);//{name: 'Raina'}
+	console.log(employee.name);//Raina
+</script>
+
+
+4. OBJECT.ASSIGN() : 
+====================
+What if we want to create an object that needs to have properties from more than one object? 
+Object.assign() comes to our help.
+The Object.assign() method is used to copy the values of all enumerable own properties from one or 
+more source objects to a target object. It will return the target object.
+<script>
+	let div1 = {
+		height:10,
+		width:20,
+		color:"red"
+	}
+
+	let div2 ={
+		border:"solid blue"
+	}
+
+	let div3 = Object.assign({},div1, div2); //{} = target , div1, div2 = sources
+  //let div3 = Object.assign(div1, div2) // gives same result
+	console.log(div3);//{height: 10, width: 20, color: 'red', border: 'solid blue'}
+</script>
+
+5. CONSTRUCTOR:
+================
 
 <script>
 	function Car(modal,year,miles){
@@ -18,4 +130,113 @@ CONSTRUCTOR:
 	console.log(car1);
 	console.log(car1.year);
 	console.log(car2.carSummary());
+	
 </script>
+
+6. CLASSES
+============
+
+example 1.
+-----------
+<scetion id="section1"></scetion>
+<div id="y"></div>
+<script>
+	const section1 = document.getElementById('section1');
+	const adminBtn = document.getElementById('adminBtn');
+	const y = document.getElementById('y');
+	class Book{
+		constructor(title,author,year,price){
+			this.title = title;
+			this.author = author;
+			this.year = year;
+			this.price = price;
+		}
+		bookInfo(){
+		        return   `	
+			
+			        BOOk DISCRIPTION:<br> 
+			        Title: ${this.title}<br>
+			        Author:${this.author}<br>
+			        Publised Year: ${this.year}<br> 
+			        Price: ${this.price} `;
+
+		}
+		ageOfBook(){
+			let time1 = new Date().getFullYear()- this.year;
+			return `${this.title} Published ${time1} Year/s Ago. `;
+		}
+		//static method:
+		static adminBtnFunction(){
+         return `user name , password`;
+		}
+
+	}
+
+	//creating instances of Book :
+	let book1 = new Book("ES6","Net Ninza", 2010,"$ 22.00");
+	let book2 = new Book("SEO Rules","Mark Adam", 2014,"$ 37.99");
+
+	console.log(book1);
+	console.log(book1.ageOfBook());
+	console.log(book2.bookInfo());
+	y.innerHTML = book1.bookInfo();
+	//now try to invoke 'static function' on instances:
+	//console.log(book1.adminBtnFunction());//error. Since we know 'static method' can't provoke for instances.
+	//now invoke static method with class :
+	console.log(Book.adminBtnFunction());//
+
+  //now we are creating SUB-CLASS 'Novel' , which inherit properties and methods from it's 
+	//Prototype 'Book' 
+
+	class Novel extends Book{
+		constructor(title,author,year,price,discountPercent){
+			super(title,author,year,price);
+			this.discountPercent = discountPercent;
+		}
+		//method for sub-class 'Novel'
+		discountOnNovel(price){
+			let discount = (price*10)/100;
+			let discountPrice = (price-discount);
+			return `${discountPrice}`;
+		}
+	}
+
+	let novel1 = new Novel("History 1","Mr Kumar",1987,"$36",12);
+	let novel2 = new Novel("My Book2", "Tom",2001,"$121.99", 20);
+
+	console.log(novel1);
+	console.log(novel1.discountOnNovel(121.99));
+
+</script>
+
+example 2.
+----------
+<script>
+	class Vehicle{
+		constructor(type,modal,year,price){
+			this.type = type;
+			this.modal = modal;
+			this.year = year;
+			this.price = price;
+		}
+		//static function:
+		adminLogin(){
+           `This Is Admin page, Plese Login `;
+		}
+
+		//class method:
+		VehicalInfo(){
+			return `Modal: ${this.modal} <br> Price: ${this.price}`;
+		}
+	}
+
+	//object instances 
+	let vehical1 = new Vehicle("Car","Ford",2021,"$35,000");
+	let vehical2 = new Vehicle("Pick Up Truck","Nissan",2018,"$44,000");
+
+	console.log(vehical1);
+	console.log(vehical1.VehicalInfo);
+
+</script>
+
+
